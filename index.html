@@ -39,56 +39,65 @@
             // Put the cursor in the textarea by default
             textarea.focus();
 
+            function load() {
+                window.onhashchange = load;
 
-            // Check to see if we have localstorage capabilities
-            if(window.localStorage){
-                // Load the text from storage if it exists
-                textarea.value = localStorage["text"] || " Write something here.  It will wait for you if you come back. ";
+                // Check to see if we have localstorage capabilities
+                if(window.localStorage){
+                    var getTarget = function () {
+                        console.log(window.location.hash);
+                        return target = window.location.hash || "text";
+                    };
 
-
-                // A function that saves the text to local storage
-                var save = function() {
-                    localStorage["text"] = textarea.value;
-                }
-
-                // Every ten seconds, we save the textarea text
-                // into localStorage.
-                setInterval(save, 10*1000);
-
-                // If we detect that the page is closing
-                // save everything.
-                window.onbeforeunload = save;
+                    // Load the text from storage if it exists
+                    textarea.value = localStorage[getTarget()] || " Write something here.  It will wait for you if you come back. ";
 
 
-                // Var keeping track of the Ctrl-key state.
-                var isCtrlDown = false;
-                // When a key is released
-                document.onkeyup = function(e){
-                    // If that key is Ctrl, set the state to false
-                    if(e.keyCode == 17){
-                        isCtrlDown = false;
+                    // A function that saves the text to local storage
+                    var save = function() {
+                        localStorage[getTarget()] = textarea.value;
+                    };
+
+                    // Every ten seconds, we save the textarea text
+                    // into localStorage.
+                    setInterval(save, 10*1000);
+
+                    // If we detect that the page is closing
+                    // save everything.
+                    window.onbeforeunload = save;
+
+
+                    // Var keeping track of the Ctrl-key state.
+                    var isCtrlDown = false;
+                    // When a key is released
+                    document.onkeyup = function(e){
+                        // If that key is Ctrl, set the state to false
+                        if(e.keyCode == 17){
+                            isCtrlDown = false;
+                        }
                     }
-                }
 
-                // When a key is pressed down
-                document.onkeydown = function(e){
-                    // If it is Ctrl
-                    if(e.keyCode == 17) isCtrlDown = true;
-                    // If it is the 'S' key and control is pressed
-                    if(e.keyCode == 83 && isCtrlDown){
-                        // Save to localStorage
-                        save();
+                    // When a key is pressed down
+                    document.onkeydown = function(e){
+                        // If it is Ctrl
+                        if(e.keyCode == 17) isCtrlDown = true;
+                        // If it is the 'S' key and control is pressed
+                        if(e.keyCode == 83 && isCtrlDown){
+                            // Save to localStorage
+                            save();
 
-                        // Return false to keep the browser from trying
-                        // to save the webpage
-                        return false;
+                            // Return false to keep the browser from trying
+                            // to save the webpage
+                            return false;
+                        }
                     }
-                }
 
+                }
+                else{
+                    textarea.value = "For this to work, you need a browser with Local Storage.  Please come back with Chrome or Firefox.";
+                }
             }
-            else{
-                textarea.value = "For this to work, you need a browser with Local Storage.  Please come back with Chrome or Firefox.";
-            }
+            load();
         </script>
     </body>
 </html>
