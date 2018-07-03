@@ -1,103 +1,89 @@
 <html>
-    <head>
-        <title> Notepad - Ty Overby</title>
-        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
-        <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
 
-        <style>
-            body {
-                margin: 0px;
-                padding: 10px;
-            }
+<head>
+    <title> Notepad - Ty Overby</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
 
-            textarea {
-                margin: 0px;
-                padding: 0px;
+    <style>
+        body {
+            margin: 0px;
+            padding: 10px;
+        }
 
-                width: 100%;
-                height: 100%;
+        textarea {
+            margin: 0px;
+            padding: 0px;
 
-                color: rgb(30,30,30);
+            width: 100%;
+            height: 100%;
 
-                font-family: 'Ubuntu Mono', monospace;
-                font-size: 18px;
+            color: rgb(30, 30, 30);
 
-                border: none;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 18px;
 
-                outline:0px none transparent;
-                resize: none;
-            }
-        </style>
+            border: none;
 
-    </head>
-    <body>
-        <textarea id="ta" spellcheck="false"> * write something here * </textarea>
+            outline: 0px none transparent;
+            resize: none;
+        }
+    </style>
 
-        <script>
-            // We use this a lot...
-            var textarea = document.getElementById("ta");
-            // Put the cursor in the textarea by default
-            textarea.focus();
+</head>
 
-            function load() {
-                window.onhashchange = load;
+<body>
+    <textarea id="ta" spellcheck="false"> * write something here * </textarea>
 
-                // Check to see if we have localstorage capabilities
-                if(window.localStorage){
-                    var getTarget = function () {
-                        console.log(window.location.hash);
-                        return target = window.location.hash || "text";
-                    };
+    <script>
+        // We use this a lot...
+        var textarea = document.getElementById("ta");
+        // Put the cursor in the textarea by default
+        textarea.focus();
 
+        function load() {
+            window.onhashchange = load;
+
+            // Check to see if we have localstorage capabilities
+            if (window.localStorage) {
+                var getTarget = function () {
+                    return target = window.location.hash || "text";
+                };
+
+                if (getTarget() === '#list') {
+                    var items = Object.keys(localStorage);
+                    items.sort();
+                    textarea.value = items.join("\n");
+                } else {
                     // Load the text from storage if it exists
                     textarea.value = localStorage[getTarget()] || " Write something here.  It will wait for you if you come back. ";
+                }
 
-
-                    // A function that saves the text to local storage
-                    var save = function() {
+                // A function that saves the text to local storage
+                var save = function () {
+                    console.log(textarea.value, textarea.value.trim() === "");
+                    if (textarea.value.trim() === "") {
+                        console.log('deleting');
+                        delete localStorage[getTarget()];
+                    } else {
                         localStorage[getTarget()] = textarea.value;
-                    };
-
-                    // Every ten seconds, we save the textarea text
-                    // into localStorage.
-                    setInterval(save, 10*1000);
-
-                    // If we detect that the page is closing
-                    // save everything.
-                    window.onbeforeunload = save;
-
-
-                    // Var keeping track of the Ctrl-key state.
-                    var isCtrlDown = false;
-                    // When a key is released
-                    document.onkeyup = function(e){
-                        // If that key is Ctrl, set the state to false
-                        if(e.keyCode == 17){
-                            isCtrlDown = false;
-                        }
                     }
+                };
 
-                    // When a key is pressed down
-                    document.onkeydown = function(e){
-                        // If it is Ctrl
-                        if(e.keyCode == 17) isCtrlDown = true;
-                        // If it is the 'S' key and control is pressed
-                        if(e.keyCode == 83 && isCtrlDown){
-                            // Save to localStorage
-                            save();
+                // Every second, we save the textarea text
+                // into localStorage.
+                setInterval(save, 1000);
 
-                            // Return false to keep the browser from trying
-                            // to save the webpage
-                            return false;
-                        }
-                    }
-
-                }
-                else{
-                    textarea.value = "For this to work, you need a browser with Local Storage.  Please come back with Chrome or Firefox.";
-                }
+                // If we detect that the page is closing
+                // save everything.
+                window.onbeforeunload = save;
             }
-            load();
-        </script>
-    </body>
+            else {
+                textarea.value = "For this to work, you need a browser with Local Storage.  Please come back with Chrome or Firefox.";
+            }
+        }
+        load();
+    </script>
+</body>
+
 </html>
