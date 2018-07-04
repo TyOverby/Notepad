@@ -10,6 +10,8 @@
         body {
             margin: 0px;
             padding: 10px;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 18px;
         }
 
         textarea {
@@ -21,8 +23,6 @@
 
             color: rgb(30, 30, 30);
 
-            font-family: 'Ubuntu Mono', monospace;
-            font-size: 18px;
 
             border: none;
 
@@ -69,6 +69,9 @@
                 if (getTarget() === '#list') {
                     var items = Object.keys(localStorage);
                     items.sort();
+                    while (list.firstChild) {
+                        list.removeChild(list.firstChild);
+                    }
 
                     for (var idx in items) {
                         var item = items[idx];
