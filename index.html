@@ -42,7 +42,6 @@
         var textarea = document.getElementById("ta");
         var list = document.getElementById("list");
         // Put the cursor in the textarea by default
-        textarea.focus();
 
         if (localStorage["text"]) {
             localStorage["#default"] = localStorage["text"];
@@ -50,6 +49,7 @@
         }
 
         function load() {
+            textarea.focus();
             window.onhashchange = function () {
                 save(window.current);
                 load();
