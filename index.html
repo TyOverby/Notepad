@@ -47,6 +47,9 @@
             localStorage["#default"] = localStorage["text"];
             delete localStorage["text"];
         }
+        if (localStorage["#list"]) {
+            delete localStorage["#list"];
+        }
 
         function load() {
             textarea.focus();
