@@ -43,6 +43,11 @@
         // Put the cursor in the textarea by default
         textarea.focus();
 
+        if (localStorage["text"]) {
+            localStorage["#default"] = localStorage["text"];
+            delete localStorage["text"];
+        }
+
         function load() {
             window.onhashchange = function () {
                 save(window.current);
