@@ -2,6 +2,7 @@
 
 <head>
     <title> Notepad - Ty Overby</title>
+    <meta charset="utf8" />
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
 
@@ -34,50 +35,69 @@
 
 <body>
     <textarea id="ta" spellcheck="false"> * write something here * </textarea>
-
+    <ul id="list"> </ul>
     <script>
         // We use this a lot...
         var textarea = document.getElementById("ta");
+        var list = document.getElementById("list");
         // Put the cursor in the textarea by default
         textarea.focus();
 
         function load() {
-            window.onhashchange = load;
+            window.onhashchange = function () {
+                save(window.current);
+                load();
+            }
+            window.current = getTarget();
+
+            function save(target) {
+                if (textarea.value.trim() === "") {
+                    console.log('deleting');
+                    delete localStorage[target];
+                } else {
+                    localStorage[target] = textarea.value;
+                }
+            };
+
+            function getTarget() {
+                return target = window.location.hash || "#default";
+            };
 
             // Check to see if we have localstorage capabilities
             if (window.localStorage) {
-                var getTarget = function () {
-                    return target = window.location.hash || "#default";
-                };
 
                 if (getTarget() === '#list') {
                     var items = Object.keys(localStorage);
                     items.sort();
-                    textarea.value = items.join("\n");
+
+                    for (var idx in items) {
+                        var item = items[idx];
+                        var a = document.createElement("a");
+                        a.href = item;
+                        a.innerText = item;
+                        var li = document.createElement("li");
+                        li.appendChild(a);
+                        list.appendChild(li);
+                    };
+
+                    textarea.style.display = "none";
+                    list.style.display = ""
+
                     return;
                 } else {
                     // Load the text from storage if it exists
                     textarea.value = localStorage[getTarget()] || " Write something here.  It will wait for you if you come back. ";
+                    textarea.style.display = "";
+                    list.style.display = "none";
                 }
 
                 // A function that saves the text to local storage
-                var save = function () {
-                    console.log(textarea.value, textarea.value.trim() === "");
-                    if (textarea.value.trim() === "") {
-                        console.log('deleting');
-                        delete localStorage[getTarget()];
-                    } else {
-                        localStorage[getTarget()] = textarea.value;
-                    }
-                };
-
-                // Every second, we save the textarea text
-                // into localStorage.
-                setInterval(save, 1000);
 
                 // If we detect that the page is closing
                 // save everything.
-                window.onbeforeunload = save;
+                window.onbeforeunload = function () {
+                    save(getTarget());
+                };
             }
             else {
                 textarea.value = "For this to work, you need a browser with Local Storage.  Please come back with Chrome or Firefox.";
