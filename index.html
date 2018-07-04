@@ -37,6 +37,7 @@
     <textarea id="ta" spellcheck="false"> * write something here * </textarea>
     <ul id="list"> </ul>
     <script>
+        var defaultText = " Write something here.  It will wait for you if you come back. ";
         // We use this a lot...
         var textarea = document.getElementById("ta");
         var list = document.getElementById("list");
@@ -56,8 +57,8 @@
             window.current = getTarget();
 
             function save(target) {
-                if (textarea.value.trim() === "") {
-                    console.log('deleting');
+                var textValue = textarea.value.trim();
+                if (textValue === "" || textValue == defaultText.trim()) {
                     delete localStorage[target];
                 } else {
                     localStorage[target] = textarea.value;
@@ -70,7 +71,6 @@
 
             // Check to see if we have localstorage capabilities
             if (window.localStorage) {
-
                 if (getTarget() === '#list') {
                     var items = Object.keys(localStorage);
                     items.sort();
@@ -94,7 +94,7 @@
                     return;
                 } else {
                     // Load the text from storage if it exists
-                    textarea.value = localStorage[getTarget()] || " Write something here.  It will wait for you if you come back. ";
+                    textarea.value = localStorage[getTarget()] || defaultText;
                     textarea.style.display = "";
                     list.style.display = "none";
                 }
