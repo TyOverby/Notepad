@@ -47,13 +47,14 @@
             // Check to see if we have localstorage capabilities
             if (window.localStorage) {
                 var getTarget = function () {
-                    return target = window.location.hash || "text";
+                    return target = window.location.hash || "#default";
                 };
 
                 if (getTarget() === '#list') {
                     var items = Object.keys(localStorage);
                     items.sort();
                     textarea.value = items.join("\n");
+                    return;
                 } else {
                     // Load the text from storage if it exists
                     textarea.value = localStorage[getTarget()] || " Write something here.  It will wait for you if you come back. ";
