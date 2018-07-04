@@ -57,6 +57,9 @@
             window.current = getTarget();
 
             function save(target) {
+                if (target === "#list") {
+                    return;
+                }
                 var textValue = textarea.value.trim();
                 if (textValue === "" || textValue == defaultText.trim()) {
                     delete localStorage[target];
