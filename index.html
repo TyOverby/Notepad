@@ -22,8 +22,6 @@
             height: 100%;
 
             color: rgb(30, 30, 30);
-
-
             border: none;
 
             outline: 0px none transparent;
@@ -38,18 +36,16 @@
     <ul id="list"> </ul>
     <script>
         var defaultText = " Write something here.  It will wait for you if you come back. ";
-        // We use this a lot...
         var textarea = document.getElementById("ta");
         var list = document.getElementById("list");
-        // Put the cursor in the textarea by default
 
+        // Migrate from old "text" to new "#default"
         if (localStorage["text"]) {
             localStorage["#default"] = localStorage["text"];
             delete localStorage["text"];
         }
-        if (localStorage["#list"]) {
-            delete localStorage["#list"];
-        }
+        // Delete "#list" if it is present.
+        delete localStorage["#list"];
 
         function load() {
             textarea.focus();
@@ -104,8 +100,6 @@
                     textarea.style.display = "";
                     list.style.display = "none";
                 }
-
-                // A function that saves the text to local storage
 
                 // If we detect that the page is closing
                 // save everything.
